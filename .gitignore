@@ -1,0 +1,8 @@
+Auth Server/config/config.env
+Auth Server/node_modules
+Backend/config/config.env
+Backend/node_modules
+Backend/rough.txt
+Auth Server/playground.js
+Frontend/ehr-frontend/node_modules
+CSCI 531-EHR.postman_collection.json
