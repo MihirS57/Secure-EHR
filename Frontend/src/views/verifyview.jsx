@@ -13,10 +13,46 @@ export default function VerifyView(){
           headers: {
             'Content-Type': 'application/json',
             'Authorization': accessToken
-          }
+          },
         })
           .then(data => data.json())
        }
+    
+    function verifyUser(user_id){
+        return fetch('http://localhost:4000/api/verifyUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': accessToken
+          },
+          body: JSON.stringify({user_id: user_id})
+        })
+          .then(data => data.json())
+    }
+    
+
+    function approveUser(user_id,req_idx){
+        console.log(user_id)
+        verifyUser(user_id).then(response => {
+            if('success' in response){
+                if(response['success']){
+                    if('message' in response){
+                        console.log('Server says',response['message'])
+                        requests.splice(req_idx, 1);
+                        console.log(requests.length)
+                    }
+                }else{
+                    if('message' in response){
+                        console.log('Unsuccessful, message',response['message'])
+                    }else if('error' in response){
+                        console.log('Unsuccessful, error',response['error'])
+                    }else{
+                        console.log('Unsuccessful')
+                    }
+                }
+            }
+        })
+    }
 
     useEffect(() => {
         let mounted = true;
@@ -44,17 +80,14 @@ export default function VerifyView(){
         return () => mounted = false;
       },[])
 
-    function verifyUser(id){
-        
-    }
 
     return (
         <>
         <ul>
             {requests.length === 0 && "No Requests found!"}
-            {requests.map(request => {
+            {requests.map((request,idx) => {
                 return <li key={request._id}>
-                    <VerifyItem request={request} />
+                    <VerifyItem request={request} verify={approveUser} index={idx} />
                     </li>
             })}
         </ul>
