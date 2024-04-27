@@ -34,6 +34,24 @@ const patientSchema = mongoose.Schema({
         }
         
     }, 
+    disease: {
+        data: {
+            type: String,
+            required: ['true','Disease is mandatory']
+        },
+        tag: {
+            type: String
+        }
+    },
+    medication: {
+        data: {
+            type: String,
+            required: ['true','Medication is mandatory']
+        },
+        tag: {
+            type: String
+        }
+    },
     emergency_contact: {
         name: {
             data: {
@@ -54,24 +72,6 @@ const patientSchema = mongoose.Schema({
                 type: String
             }
             
-        },
-        disease: {
-            data: {
-                type: String,
-                required: ['true','Disease is mandatory']
-            },
-            tag: {
-                type: String
-            }
-        },
-        medications: {
-            data: {
-                type: String,
-                required: ['true','Medication is mandatory']
-            },
-            tag: {
-                type: String
-            }
         }
     }
 })

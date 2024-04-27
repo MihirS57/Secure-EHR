@@ -80,7 +80,8 @@ function hasAccess(route, user_role){
         '/updatePatient': ['admin','audit-1','audit-2','audit-3'],
         '/deletePatient': ['admin','audit-1','audit-2','audit-3'],
         '/getVRequests': ['admin'],
-        '/verifyUser': ['admin']
+        '/verifyUser': ['admin'],
+        '/getPatientUsers': ['admin']
     }
     return rules[route].includes(user_role);
 }

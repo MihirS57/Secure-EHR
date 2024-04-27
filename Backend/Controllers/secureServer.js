@@ -98,3 +98,14 @@ exports.getRequests = (req,res,next) => {
         req,res
     )
 }
+
+exports.getPatientUsers = (req,res,next) => {
+    contactAuthServer(
+        'GET',
+        {
+            'content-type': 'application/json',
+        },
+        '/auth/getPUsers',
+        req,res
+    )
+}

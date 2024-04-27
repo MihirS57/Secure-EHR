@@ -84,7 +84,7 @@ export default function VerifyView(){
     return (
         <>
         <ul>
-            {requests.length === 0 && "No Requests found!"}
+            {` ${requests.length} Requests found!`}
             {requests.map((request,idx) => {
                 return <li key={request._id}>
                     <VerifyItem request={request} verify={approveUser} index={idx} />

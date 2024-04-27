@@ -1,11 +1,12 @@
 const userSchema = require('../models/user')
 const auditSchema = require('../models/audit')
 const patientSchema = require('../models/patient')
+const VRSchema = require('../models/verificationRequests')
 const tools = require('../tools')
 
 exports.addPatient = async (req,res,next) => {
     try{
-        const {user, patient_user_id, age, blood_group, ec_name, ec_contact} = req.body
+        const {user, patient_user_id, age, blood_group,disease,medication, ec_name, ec_contact} = req.body
         const id = user.id
         const user_type = user.user_type
         const getUser = await userSchema.findById(patient_user_id)
@@ -23,10 +24,22 @@ exports.addPatient = async (req,res,next) => {
             user_id: patient_user_id,
             age: tools.encryptInAES(key,iv,age),
             blood_group: tools.encryptInAES(key,iv,blood_group),
+            disease: tools.encryptInAES(key,iv,disease),
+            medication: tools.encryptInAES(key,iv,medication),
             emergency_contact: {
                 name: tools.encryptInAES(key,iv,ec_name),
                 contact_details: tools.encryptInAES(key,iv,ec_contact)
             }
+        })
+        const verifiedPatient = await userSchema.findByIdAndUpdate(getUser._id,{
+            admin_verified: tools.encryptInAES(
+                process.env.SERVER_SECRET_KEY, 
+                process.env.SERVER_SECRET_IV,
+                'true'
+                )
+        })
+        const requestRecord = await VRSchema.findOneAndUpdate({user_id: getUser._id},{
+            request_status: 'completed'
         })
         // const storeKeys = await tools.storeKeyRest('patient',keyData.key,keyData.iv,patientUser._id)
         console.log(id)
@@ -78,7 +91,7 @@ exports.updatePatient = async (req,res,next) => {
         console.log(req.body)
         const user_id = user.id
         const keyStored = await tools.getKeyRestStored('user',patient_user_id)
-        let updatedPatient = {}, recordsUpdated = []
+        let updatedPatient = {emergency_contact: {}}, recordsUpdated = []
         if(name != undefined){
             recordsUpdated.push('name')
             updatedPatient.name = tools.encryptInAES(keyStored.key_used,keyStored.iv_used,name)
@@ -168,8 +181,11 @@ exports.getPatient = async (req,res,next) => {
                 decryptedPatients.push({
                     name: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].name.data,allPatients[i].name.tag),
                     patient_id: allPatients[i]._id,
+                    user_id: allPatients[i].user_id,
                     age: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].age.data,allPatients[i].age.tag),
                     blood_group: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].blood_group.data,allPatients[i].blood_group.tag),
+                    disease: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].disease.data,allPatients[i].disease.tag),
+                    medication: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].medication.data,allPatients[i].medication.tag),
                     emergency_contact: {
                         name: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].emergency_contact.name.data, allPatients[i].emergency_contact.name.tag),
                         contact_details: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,allPatients[i].emergency_contact.contact_details.data,allPatients[i].emergency_contact.contact_details.tag)

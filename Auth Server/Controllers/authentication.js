@@ -2,6 +2,8 @@ const crypto = require('crypto');
 const userSchema = require('../models/user')
 const keyRest = require('../models/keyRest')
 const VRSchema = require('../models/verificationRequests')
+const tools = require('../tools')
+
 exports.login = async (req,res,next) => {
     try{
         console.log(req.url)
@@ -183,7 +185,8 @@ exports.verify = async (req, res, next) => {
 
 exports.getVRequests = async (req, res, next) => {
     try{
-        const vRequests = await VRSchema.find({request_status: 'pending'})
+        const vRequests = await VRSchema.find(
+            {request_status: 'pending', user_type: { $ne: 'patient' } })
         if(vRequests.length > 0){
             return res.status(200).json({
                 success: true,
@@ -194,6 +197,37 @@ exports.getVRequests = async (req, res, next) => {
             success: true,
             requests: []
         })
+    }catch(err){
+        return res.status(500).json({
+            success: false,
+            error: err.message
+        })
+    }
+}
+
+exports.getPatientUsers = async (req, res, next) => {
+    try{
+        const patientUsers = await userSchema.find({user_type: 'patient', 'admin_verified.data': 'false'});
+        let decryptedPatientsUsers = [],len = patientUsers.length
+        if(len > 0){
+            for(let i=0;i<len;i++){
+                const keyStored = await tools.getKeyRestStored('user',patientUsers[i]._id)
+                decryptedPatientsUsers.push({
+                    id: patientUsers[i]._id,
+                    name: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,patientUsers[i].name.data,patientUsers[i].name.tag),
+                    email: tools.decryptInAES(keyStored.key_used,keyStored.iv_used,patientUsers[i].email.data,patientUsers[i].email.tag)
+                })
+            }
+            return res.status(200).json({
+                success: true,
+                patient_users: decryptedPatientsUsers
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            patient_users: []
+        })
+
     }catch(err){
         return res.status(500).json({
             success: false,

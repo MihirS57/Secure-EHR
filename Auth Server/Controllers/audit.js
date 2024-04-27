@@ -12,6 +12,7 @@ exports.getAuditData = async (req,res,next) => {
             }
             return res.status(200).json({
                 success: true,
+                num: auditData.length,
                 audit: auditData
             })
         }else{

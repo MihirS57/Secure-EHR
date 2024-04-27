@@ -1,47 +1,47 @@
+import { useEffect } from "react";
 import { useState } from "react";
-import ListItem from "../components/listitem";
+import AuditItem from "../components/audititem";
+
 
 export default function AuditView(){
-    let items = [
-        {
-            id: 1,
-            header: 'Audit 1',
-            subOne: 'subOne 1',
-            subTwo: 'subTwo 2',
-            subThree: 'subThree 3'
-        },
-        {
-            id: 2,
-            header: 'Audit 2',
-            subOne: 'subOne 1',
-            subTwo: 'subTwo 2',
-            subThree: 'subThree 3'
-        },
-        {
-            id: 3,
-            header: 'Audit 3',
-            subOne: 'subOne 1',
-            subTwo: 'subTwo 2',
-            subThree: 'subThree 3'
-        }
-    ]
+    const [auditLogs,setAuditLogs] = useState([])
+    const accessToken = 'Bearer '+localStorage.getItem('accessToken');
 
-    function editItem(id){
-        console.log('edit',id)
+    function getAuditLogs(user_id){
+        return fetch('http://localhost:4000/api/getAudit', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': accessToken
+          }
+        })
+          .then(data => data.json())
     }
+    
+    useEffect(() => {
+        getAuditLogs().then(response => {
+            if('success' in response){
+                if(response['success']){
+                    if('audit' in response){
+                        setAuditLogs(response['audit'])
+                    }
+                }
+            }else{
+                console.log(response['error'])
+                console.log(response['message'])
+            }
+        })
+    } ,[])
 
-    function deleteItem(id){
-        console.log('delete',id)
-    }
 
     return (
         <>
         <ul>
-            {items.length === 0 && "No data found!"}
-            {items.map(item => {
-                return <li key={item.id}>
-                    <ListItem editThis={editItem} deleteThis={deleteItem} item={item} />
-                    </li>
+            {` ${auditLogs.length} Audits found!`}
+            {auditLogs.map(audit => {
+                return <li key={audit._id}>
+                <AuditItem audit={audit}/>
+                </li>
             })}
         </ul>
         </>

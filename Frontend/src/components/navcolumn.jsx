@@ -15,6 +15,9 @@ export default function NavColumn(){
                 <li className={useMatch({path: useResolvedPath('/dashboard/verifications').pathname, end: true}) ? "navActive" : ""}>
                 <Link to='/dashboard/verifications'>Verification Requests (Admin)</Link>    
                 </li>
+                <li className={useMatch({path: useResolvedPath('/dashboard/users').pathname, end: true}) ? "navActive" : ""}>
+                <Link to='/dashboard/users'>Users Data (Admin)</Link>
+                </li>
                 
             </ul>
             

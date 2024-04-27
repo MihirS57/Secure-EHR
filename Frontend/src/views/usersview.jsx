@@ -1,13 +1,11 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PatientItem from "../components/patientitem";
-
-export default function PatientsView(){
-    const [patients,setPatients] = useState([])
+export default function UsersView() {
+    const [patientUsers,setPatientUsers] = useState([])
     const accessToken = 'Bearer '+localStorage.getItem('accessToken');
 
     function getPatients(){
-        return fetch('http://localhost:4000/api/getPatient', {
+        return fetch('http://localhost:4000/api/getPatientUsers', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -20,8 +18,8 @@ export default function PatientsView(){
     useEffect(() => {
         getPatients().then(response => {
             if('success' in response){
-                if('patients' in response){
-                    setPatients(response['patients'])
+                if('patient_users' in response){
+                    setPatientUsers(response['patient_users'])
                 }
             }
         })
@@ -39,10 +37,10 @@ export default function PatientsView(){
     return (
         <>
         <ul>
-            {` ${patients.length} patients found!`}
-            {patients.map((patient,idx) => {
-                return <li key={patient._id}>
-                    <PatientItem index={idx} patient={patient} verified={true}/>
+            {` ${patientUsers.length} patient users found!`}
+            {patientUsers.map((patientUser,idx) => {
+                return <li key={patientUser.id}>
+                    <PatientItem index={idx} patient={patientUser} verified={false} />
                     </li>
             })}
             
