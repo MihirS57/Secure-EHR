@@ -36,7 +36,8 @@ const userSchema = mongoose.Schema({
     },
     user_type: {
         type: String,
-        enum: ['admin','patient','audit-1','audit-2','audit-3']
+        enum: ['admin','patient','audit-1','audit-2','audit-3'],
+        required: ['true','User role is mandatory']
     },
     admin_verified: {
         data: {

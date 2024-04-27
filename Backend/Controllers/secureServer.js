@@ -2,7 +2,7 @@ const axios = require('axios')
 const contactAuthServer = require('../middleware/contactAuth')
 exports.login = (req,res,next) => {
     contactAuthServer(
-        'GET',
+        'POST',
         {
             'content-type': 'application/json',
         },

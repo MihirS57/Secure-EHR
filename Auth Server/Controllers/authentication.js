@@ -40,7 +40,7 @@ exports.login = async (req,res,next) => {
 
 exports.register = async (req,res,next) => {
     try{
-        console.log(process.env.SERVER_SECRET_KEY)
+        // console.log(process.env.SERVER_SECRET_KEY)
         const {name,email,password,user_type} = req.body
         const unique_id = crypto.createHash('sha256').update(name+email).digest('hex');
         const userExists = await userSchema.findOne({unique_id: unique_id})
@@ -67,6 +67,9 @@ exports.register = async (req,res,next) => {
             document_id: addUser._id
         })
         const addRequest = await VRSchema.create({
+            name: name,
+            email: email,
+            user_type: addUser.user_type,
             user_id: addUser._id,
             request_status: 'pending'
         })
@@ -180,7 +183,7 @@ exports.verify = async (req, res, next) => {
 
 exports.getVRequests = async (req, res, next) => {
     try{
-        const vRequests = await VRSchema.find()
+        const vRequests = await VRSchema.find({request_status: 'pending'})
         if(vRequests.length > 0){
             return res.status(200).json({
                 success: true,

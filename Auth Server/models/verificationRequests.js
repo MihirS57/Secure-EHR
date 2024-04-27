@@ -5,6 +5,15 @@ const VRSchema = mongoose.Schema({
         required: ['true','Patient ID is mandatory'],
         ref: 'user'
     },
+    name: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    user_type: {
+        type: String
+    },
     request_status: {
         type: String,
         enum: ['pending','completed']
