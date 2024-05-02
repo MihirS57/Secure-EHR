@@ -1,8 +1,25 @@
 const mongoose = require('mongoose')
+const connectDB = require('../config/db')
+let {connKey,connDB} = connectDB()
+
+const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZone: 'PT', // Set your desired time zone here
+    timeZoneName: 'short' // This will display the abbreviated time zone name
+};
+
 const auditSchema = mongoose.Schema({
     date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        get: function() {
+            return this._id.getTimestamp().toLocaleString('en-US', options);
+        }
     },
     patient_id: [{
         type: mongoose.Schema.ObjectId,
@@ -21,4 +38,4 @@ const auditSchema = mongoose.Schema({
     },
 
 })
-module.exports = mongoose.model('audit',auditSchema);
+module.exports = connDB.model('audit',auditSchema);

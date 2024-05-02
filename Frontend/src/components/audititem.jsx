@@ -10,10 +10,10 @@ export default function AuditItem(props){
 
     return (
         <>
-        <p>{props.audit.data}</p>
-        <p>{props.audit.patient_id}</p>
-        <p>{props.audit.user_id}</p>
-        <p>{props.audit.action_type}</p>
+        <p>Date: {props.audit.date}</p>
+        {props.audit.patient_id && <p>Patient ID: {props.audit.patient_id.toString()}</p>}
+        <p>User ID: {props.audit.user_id}</p>
+        <p>Action Type: {props.audit.action_type}</p>
         </>
     )
 

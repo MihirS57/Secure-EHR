@@ -5,6 +5,7 @@ import AuditItem from "../components/audititem";
 
 export default function AuditView(){
     const [auditLogs,setAuditLogs] = useState([])
+    const [message,setMessage] = useState("")
     const accessToken = 'Bearer '+localStorage.getItem('accessToken');
 
     function getAuditLogs(user_id){
@@ -20,6 +21,7 @@ export default function AuditView(){
     
     useEffect(() => {
         getAuditLogs().then(response => {
+
             if('success' in response){
                 if(response['success']){
                     if('audit' in response){
@@ -30,6 +32,10 @@ export default function AuditView(){
                 console.log(response['error'])
                 console.log(response['message'])
             }
+            if('message' in response){
+                console.log('Server says',response['message'])
+                setMessage(response['message'])
+            }
         })
     } ,[])
 
@@ -38,6 +44,7 @@ export default function AuditView(){
         <>
         <ul>
             {` ${auditLogs.length} Audits found!`}
+            <p>{message}</p>
             {auditLogs.map(audit => {
                 return <li key={audit._id}>
                 <AuditItem audit={audit}/>

@@ -4,6 +4,7 @@ import VerifyItem from "../components/verifyitem";
 
 export default function VerifyView(){
     const [requests,setRequests] = useState([])
+    const [message,setMessage] = useState("")
     const accessToken = 'Bearer '+localStorage.getItem('accessToken');
 
     function getVRequests() {
@@ -58,7 +59,8 @@ export default function VerifyView(){
         let mounted = true;
         getVRequests().then(response => {
             
-            console.log('Response',response)
+            // console.log('Response',response)
+            
             if ('success' in response) {
                 if(response['success']){
                     if('requests' in response){
@@ -67,14 +69,16 @@ export default function VerifyView(){
                     }
                 }
             } else {
-                if('message' in response){
-                    console.log('Server says',response['message'])
-                }else if('error' in response){
+                if('error' in response){
                     console.log('Server says',response['error'])
                 }else{
                     console.log('Some error occured')
                 }
-          }
+            }
+            if('message' in response){
+                console.log('Server says',response['message'])
+                setMessage(response['message'])
+            }
         }
         )
         return () => mounted = false;
@@ -85,6 +89,7 @@ export default function VerifyView(){
         <>
         <ul>
             {` ${requests.length} Requests found!`}
+            <p>{message}</p>
             {requests.map((request,idx) => {
                 return <li key={request._id}>
                     <VerifyItem request={request} verify={approveUser} index={idx} />

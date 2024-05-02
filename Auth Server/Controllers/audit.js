@@ -1,9 +1,12 @@
 const auditSchema = require('../models/audit')
+const patientSchema = require('../models/patient')
 exports.getAuditData = async (req,res,next) => {
     try{
         const {user,patient_id} = req.body
         if(user.user_type == 'patient'){
-            const auditData = await auditSchema.find({patient_id: patient_id})
+            console.log("UID:",user.id)
+            const patientData = await patientSchema.findOne({user_id: user.id})
+            const auditData = await auditSchema.find({ patient_id: { $in: patientData._id } })
             if(!auditData){
                 return res.status(400).json({
                     success: false,
@@ -16,7 +19,7 @@ exports.getAuditData = async (req,res,next) => {
                 audit: auditData
             })
         }else{
-            const auditData = await auditSchema.find()
+            const auditData = await auditSchema.find().sort({ date: -1 })
             if(!auditData){
                 return res.status(400).json({
                     success: false,

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PatientItem from "../components/patientitem";
 export default function UsersView() {
     const [patientUsers,setPatientUsers] = useState([])
+    const [message,setMessage] = useState("")
     const accessToken = 'Bearer '+localStorage.getItem('accessToken');
 
     function getPatients(){
@@ -21,6 +22,9 @@ export default function UsersView() {
                 if('patient_users' in response){
                     setPatientUsers(response['patient_users'])
                 }
+                if('message' in response){
+                    setMessage(response['message'])
+                }
             }
         })
     },[])
@@ -38,6 +42,7 @@ export default function UsersView() {
         <>
         <ul>
             {` ${patientUsers.length} patient users found!`}
+            <p>{message}</p>
             {patientUsers.map((patientUser,idx) => {
                 return <li key={patientUser.id}>
                     <PatientItem index={idx} patient={patientUser} verified={false} />

@@ -55,37 +55,45 @@ export default function Register() {
             <>
             <label htmlFor="input_fullname">Full name</label>
             <input type="text" id="input_fullname" onChange={(e) => setName(e.target.value)}/>
+            <br></br>
             <label htmlFor="input_email" >Email Address</label>
             <input type="text" id="input_email" onChange={(e) => setEmail(e.target.value)}/>
+            <br></br>
             <label htmlFor="input_password" >Password</label>
             <input type="password" id="input_password" onChange={(e) => setPassword(e.target.value)}/>
+            <br></br>
             <label htmlFor="input_cpass" >Confirm Password</label>
             <input type="password" id="input_cpass" onChange={(e) => setCPass(e.target.value)}/>
+            <br></br>
             <div>
                 <input type="radio" id="patient" value="patient"
                     checked={user_type === "patient"} 
                     onChange={() =>  handleRadioChange("patient")}></input>
                 <label>Patient</label>
-
+                <br></br>
                 <input type="radio" id="audit-1" value="audit-1"
                     checked={user_type === "audit-1"} 
                     onChange={() =>  handleRadioChange("audit-1")}></input>
                 <label>Audit 1</label>
+                <br></br>
 
                 <input type="radio" id="audit-2" value="audit-2"
                     checked={user_type === "audit-2"} 
                     onChange={() =>  handleRadioChange("audit-2")}></input>
                 <label>Audit 2</label>
+                <br></br>
 
                 <input type="radio" id="audit-3" value="audit-3"
                     checked={user_type === "audit-3"} 
                     onChange={() =>  handleRadioChange("audit-3")}></input>
                 <label>Audit 3</label>
+                <br></br>
 
                 <input type="radio" id="admin" value="admin"
                     checked={user_type === "admin"} 
                     onChange={() =>  handleRadioChange("admin")}></input>
                 <label>Admin</label>
+                <br></br>
 
             </div>
             <button id="submitForm" onClick={() => handleRegister()}>Submit</button>

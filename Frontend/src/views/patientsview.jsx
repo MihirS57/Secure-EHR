@@ -38,7 +38,7 @@ export default function PatientsView(){
 
     return (
         <>
-        <ul>
+        <ul>    
             {` ${patients.length} patients found!`}
             {patients.map((patient,idx) => {
                 return <li key={patient._id}>

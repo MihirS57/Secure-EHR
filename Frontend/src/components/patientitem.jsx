@@ -62,8 +62,8 @@ export default function PatientItem(props){
 
     return (
         <>
-        <p>{props.patient.name}</p>
-        <p>{props.patient.email}</p>
+        {props.patient.patient_id && <p>ID (last 5 characters): ...{props.patient.patient_id.slice(-5)}</p>}
+        <p>Name: {props.patient.name}</p>
         <label htmlFor="input_age">Age</label>
         <input type="text" id="input_age" value={age} onChange={(e) => setAge(e.target.value)}/>
         <br></br>

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const connectDB = require('../config/db')
+let {connKey,connDB} = connectDB()
 const patientSchema = mongoose.Schema({
     name: {
         data: {
@@ -75,4 +77,4 @@ const patientSchema = mongoose.Schema({
         }
     }
 })
-module.exports = mongoose.model('patient',patientSchema);
+module.exports = connDB.model('patient',patientSchema);

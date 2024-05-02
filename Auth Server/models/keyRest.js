@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const connectDB = require('../config/db')
+let {connKey,connDB} = connectDB()
+console.log(connKey.readyState,connDB.readyState)
 const keyRestSchema = mongoose.Schema({
     table_name: {
         type: String,
@@ -19,4 +22,4 @@ const keyRestSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('KeyRest',keyRestSchema);
+module.exports = connKey.model('KeyRest',keyRestSchema);

@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 const PORT = process.env.PORT
 // connectDbPG();
-connectDbMG();
+// connectDbMG();
 app.use(cors())
 
 app.use('/handshake',handshakeRoute)

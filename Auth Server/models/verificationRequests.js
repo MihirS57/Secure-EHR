@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const connectDB = require('../config/db')
+let {connKey,connDB} = connectDB()
 const VRSchema = mongoose.Schema({
     user_id: {
         type: mongoose.Schema.ObjectId,
@@ -19,4 +21,4 @@ const VRSchema = mongoose.Schema({
         enum: ['pending','completed']
     }
 })
-module.exports = mongoose.model('v-requests',VRSchema);
+module.exports = connDB.model('v-requests',VRSchema);

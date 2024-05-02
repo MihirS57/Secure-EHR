@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const connectDB = require('../config/db')
+let {connKey,connDB} = connectDB()
 const userSchema = mongoose.Schema({
     name: {
         data: {
@@ -55,4 +57,5 @@ userSchema.methods.getSignedUserToken = function(){
         expiresIn: process.env.JWT_EXPIRY
     });
 }
-module.exports = mongoose.model('user',userSchema);
+
+module.exports = connDB.model('user',userSchema);

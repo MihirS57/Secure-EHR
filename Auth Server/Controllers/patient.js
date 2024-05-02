@@ -150,7 +150,9 @@ exports.getPatient = async (req,res,next) => {
         console.log(id,user_type)
         if(user_type === "patient"){
             const patientDoc = await patientSchema.findOne({user_id: id})
+            
             if(patientDoc){
+                console.log('Patient found')
                 const keyData = await tools.getKeyRestStored('user',patientDoc.user_id)
                 const key = keyData.key_used
                 const iv = keyData.iv_used
@@ -159,17 +161,23 @@ exports.getPatient = async (req,res,next) => {
                     user_id: id,
                     action_type: 'query'
                 })
-                return res.status(200).json({
-                    success: true,
-                    _id: patientDoc._id,
-                    patient_id: id,
+                let decryptedPatient = {
                     name: tools.decryptInAES(key,iv,patientDoc.name.data,patientDoc.name.tag),
+                    patient_id: patientDoc._id,
+                    user_id: patientDoc.user_id,
                     age: tools.decryptInAES(key,iv,patientDoc.age.data,patientDoc.age.tag),
                     blood_group: tools.decryptInAES(key,iv,patientDoc.blood_group.data,patientDoc.blood_group.tag),
+                    disease: tools.decryptInAES(key,iv,patientDoc.disease.data,patientDoc.disease.tag),
+                    medication: tools.decryptInAES(key,iv,patientDoc.medication.data,patientDoc.medication.tag),
                     emergency_contact: {
                         name: tools.decryptInAES(key,iv,patientDoc.emergency_contact.name.data, patientDoc.emergency_contact.name.tag),
                         contact_details: tools.decryptInAES(key,iv,patientDoc.emergency_contact.contact_details.data,patientDoc.emergency_contact.contact_details.tag)
                     }
+                }
+                return res.status(200).json({
+                    success: true,
+                    num: 1,
+                    patients: [decryptedPatient]
                 })
             }
         }else{
@@ -192,11 +200,14 @@ exports.getPatient = async (req,res,next) => {
                     }
                 })
             }
-            const auditLog = await auditSchema.create({
-                patient_id: patient_ids,
-                user_id: id,
-                action_type: 'query'
-            })
+            if(patient_ids.length > 0){
+                const auditLog = await auditSchema.create({
+                    patient_id: patient_ids,
+                    user_id: id,
+                    action_type: 'query'
+                })
+            }
+            
             
             return res.status(200).json({
                 success: true,

@@ -56,11 +56,15 @@ export default function Login(){
             <>
             <label htmlFor="input_fullname">Full name</label>
             <input type="text" id="input_fullname" onChange={(e) => setName(e.target.value)}/>
+            <br></br>
             <label htmlFor="input_email" >Email Address</label>
             <input type="text" id="input_email" onChange={(e) => setEmail(e.target.value)}/>
+            <br></br>
             <label htmlFor="input_password" >Password</label>
             <input type="password" id="input_password" onChange={(e) => setPassword(e.target.value)}/>
+            <br></br>
             <button id="submitForm" onClick={() => handleLogin()}>Submit</button>
+            <br></br>
             <Link to="/register">Sign Up</Link>
             </>
         </>
